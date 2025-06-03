@@ -182,3 +182,99 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ```
 
+# 0528
+
+### Flutter のバージョンが新しくなったことによる文法の非推奨や変更により、エラーが出てしまうことも。
+### Key key → super.key
+### FlatButton は非推奨になっており、代わりに TextButton を使用する必要があるがある
+
+```ruby:qiita.rb
+import 'package:flutter/material.dart'; 
+
+// アプリのエントリーポイント（最初に実行される関数）
+void main() {
+  runApp(MyApp()); // MyApp ウィジェットをルートとして実行
+}
+
+StatelessWidget
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Generated App', // アプリのタイトル
+      theme: ThemeData(
+        primarySwatch: Colors.blue, // メインカラーの設定（マテリアルカラー）
+        primaryColor: Color(0xFF2196f3), // アプリバーなどに使う色
+        canvasColor: Color(0xFFfafafa), // 背景色
+      ),
+      home: MyHomePage(), // アプリ起動時に表示する画面
+    );
+  }
+}
+
+// 状態を持つウィジェット
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key}); // キーを渡す
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState(); // 状態クラスを作成
+}
+
+// 実際のUIと状態管理を行うクラス
+class _MyHomePageState extends State<MyHomePage> {
+  // 表示するメッセージ
+  String _message = 'ok.';
+
+  // じゃんけんの手の候補リスト
+  final List<String> _janken = ['グー', 'チョキ', 'パー'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar( // 画面上部のアプリバー
+        title: Text('App Name'), // タイトル表示
+      ),
+      body: Center( // 画面中央に表示
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center, // 縦方向の中央寄せ
+          children: [
+            // メッセージ表示部分
+            Padding(
+              padding: EdgeInsets.all(20.0), // 余白を追加
+              child: Text(
+                _message, // 現在のメッセージを表示
+                style: TextStyle(
+                  fontSize: 32.0, // フォントサイズ
+                  fontWeight: FontWeight.w400, // 太さ
+                  fontFamily: "Roboto", // フォント
+                ),
+              ),
+            ),
+            // アイコン付きのテキストボタン
+            TextButton(
+              onPressed: buttonPressed, // ボタンが押されたときの処理
+              child: Padding(
+                padding: EdgeInsets.all(10.0), // アイコンに余白を追加
+                child: Icon(
+                  Icons.android, // Androidアイコンを表示
+                  size: 50.0, // アイコンサイズ
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ボタンが押されたときに呼び出される関数
+  void buttonPressed() {
+    setState(() {
+      // じゃんけんの手をシャッフルし、先頭の1つをメッセージとして設定
+      _message = (_janken..shuffle()).first;
+    });
+  }
+}
+
+
+```
