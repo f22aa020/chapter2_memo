@@ -186,8 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ### Flutter のバージョンが新しくなったことによる文法の非推奨や変更により、エラーが出てしまうことも。
 ### Key key → super.key
-### FlatButton は非推奨になっており、代わりに TextButton を使用する必要があるがある
-
+### FlatButton は非推奨になっており、代わりに TextButton を使用する必要がある
 ```ruby:qiita.rb
 import 'package:flutter/material.dart'; 
 
@@ -278,3 +277,5 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 ```
+
+# 0603 (P131~)
