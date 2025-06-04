@@ -279,3 +279,313 @@ class _MyHomePageState extends State<MyHomePage> {
 ```
 
 # 0603 (P131~)
+
+```ruby:qiita.rb
+import 'package:flutter/material.dart';
+
+// アプリのエントリーポイント（
+void main() {
+  runApp(const MyApp()); // MyAppウィジェットを実行
+}
+
+// アプリ全体のウィジェット
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo', // アプリのタイトル
+      theme: ThemeData(
+        // テーマカラー
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      // ホーム画面としてMyHomePageを設定
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+// ホーム画面のウィジェット
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title; // タイトル
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+// ホーム画面の状態を管理するクラス
+class _MyHomePageState extends State<MyHomePage> {
+  static var _message = 'ok.'; // 表示するメッセージ（初期値）
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('App Name'), // アプリバーのタイトル
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start, // 縦方向の配置（上寄せ）
+          mainAxisSize: MainAxisSize.max, // 利用可能なスペースを最大限使用
+          crossAxisAlignment: CrossAxisAlignment.stretch, // 横方向に広げる
+          children: <Widget>[
+            // メッセージを表示するテキスト
+            Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Text(
+                _message,
+                style: TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: "Roboto",
+                ),
+              ),
+            ),
+
+            // 間隔をあけるための空白
+            Padding(
+              padding: EdgeInsets.all(10.0),
+            ),
+
+            // ボタンを表示
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: ElevatedButton(
+                onPressed: buttonPressed, // ボタンが押されたときの処理
+                child: Text(
+                  "tap me!", // ボタンのラベル
+                  style: TextStyle(
+                    fontSize: 32.0,
+                    color: const Color(0xff000000),
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "Roboto",
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ボタンが押されたときに呼ばれる関数
+  void buttonPressed() {
+    // ダイアログを表示
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text("Hello!"), // ダイアログのタイトル
+        content: Text("This is sample."), // ダイアログの本文
+      ),
+    );
+  }
+}
+
+```
+
+
+
+# 0604 (P140~)
+### （何故か星が表示されない…→星の色のせい。ホワイトを変更する）
+
+```ruby:qiita.rb
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+// アプリ全体のルートウィジェット
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        // アプリ全体のテーマカラー設定
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+// ホーム画面のStatefulWidget
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+// ホーム画面の状態（State）クラス
+class _MyHomePageState extends State<MyHomePage> {
+  // メッセージ表示用のテキスト
+  static var _message = 'ok';
+  // 星の表示（初期は全部「☆」）
+  static var _stars = '☆☆☆☆☆';
+  // 現在の星の数（0〜5）
+  static var _star = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('My App'),
+
+        // 左上の戻るボタン（白色）
+        leading: BackButton(
+          color: Colors.white,
+        ),
+
+        // 右上のアクションアイコン（2つ）
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.android),
+            tooltip: 'add star...',
+            onPressed: iconPressedA, // 星を増やす
+          ),
+          IconButton(
+            icon: Icon(Icons.favorite),
+            tooltip: 'subtract star...',
+            onPressed: iconPressedB, // 星を減らす
+          ),
+        ],
+
+        // AppBarの下に星を表示
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(30.0),
+          child: Center(
+            child: Text(
+              _stars, // 現在の星の状態を表示
+              style: TextStyle(
+                fontSize: 22.0,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+
+      // 中央にメッセージを表示
+      body: Center(
+        child: Text(
+          _message,
+          style: const TextStyle(
+            fontSize: 28.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 「android」アイコンをタップしたときの処理
+  void iconPressedA() {
+    _message = 'tap "android".'; // メッセージ変更
+    _star++; // 星を1つ増やす
+    update(); // 状態更新
+  }
+
+  // 「favorite」アイコンをタップしたときの処理
+  void iconPressedB() {
+    _message = 'tap "favorite".'; // メッセージ変更
+    _star--; // 星を1つ減らす
+    update(); // 状態更新
+  }
+
+  // 星の数と表示を更新する関数
+  void update() {
+    // 星の数を0〜5の範囲に制限
+    _star = _star < 0 ? 0 : _star > 5 ? 5 : _star;
+
+    setState(() {
+      // 「★★★★★☆☆☆☆☆」の中から該当部分だけを抽出
+      // 例: _star = 3 の場合 → 5 - 3 = 2 から5文字 → 「★★★☆☆」
+      _stars = '★★★★★☆☆☆☆☆'.substring(5 - _star, 5 - _star + 5);
+      // メッセージに星の数を追加
+      _message = _message + '[$_star]';
+    });
+  }
+}
+
+
+```
+### class _MyHomePageStateからを変更
+
+```ruby:qiita.rb
+class _MyHomePageState extends State<MyHomePage> {
+  // 表示するメッセージ
+  static var _message = 'ok';
+
+  // 現在選択されているBottomNavigationBarのインデックス（0〜2）
+  static var _index = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // 上部のアプリバー
+      appBar: AppBar(
+        title: Text('My App'), // タイトル文字
+      ),
+
+      // 画面中央にメッセージを表示
+      body: Center(
+        child: Text(
+          _message, // 表示するテキスト
+          style: const TextStyle(
+            fontSize: 28.0, // 文字サイズ
+          ),
+        ),
+      ),
+
+      // 画面下部のナビゲーションバー
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _index, // 現在選択されているタブ
+        backgroundColor: Colors.lightBlueAccent, // 背景色
+
+        // ナビゲーションバーに表示するアイテム（3つ）
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            label: 'Android', // ラベル名
+            icon: Icon(Icons.android, color: Colors.black, size: 50), // アイコン
+          ),
+          BottomNavigationBarItem(
+            label: 'Favorite',
+            icon: Icon(Icons.favorite, color: Colors.red, size: 50),
+          ),
+          BottomNavigationBarItem(
+            label: 'Home',
+            icon: Icon(Icons.home, color: Colors.white, size: 50),
+          ),
+        ],
+
+        // アイコンがタップされたときの処理
+        onTap: tapBottomIcon,
+      ),
+    );
+  }
+
+  // ナビゲーションバーのアイコンがタップされたときに呼び出される関数
+  void tapBottomIcon(int value) {
+    // 各インデックスに対応する文字列リスト
+    var items = ['Android', 'Heart', 'Home'];
+
+    setState(() {
+      _index = value; // タップされたアイコンのインデックスを保存
+      _message = 'you tapped: "' + items[_index] + '".'; // メッセージを更新
+    });
+  }
+}
+
+
+
+```
+
