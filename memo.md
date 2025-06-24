@@ -590,3 +590,142 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ```
 
+# TODO アプリ
+```ruby:qiita.rb
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const TodoApp()); // アプリの起動
+}
+
+// アプリ全体のウィジェット
+class TodoApp extends StatelessWidget {
+  const TodoApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'ToDo List',
+      theme: ThemeData(
+        primarySwatch: Colors.blue, // 青色テーマ
+      ),
+      home: const TodoHomePage(), // ホーム画面を指定
+    );
+  }
+}
+
+// ホーム画面（タスクリスト表示など）
+class TodoHomePage extends StatefulWidget {
+  const TodoHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<TodoHomePage> createState() => _TodoHomePageState();
+}
+
+// ホーム画面の状態を管理するクラス
+class _TodoHomePageState extends State<TodoHomePage> {
+  final TextEditingController _controller = TextEditingController(); // テキスト入力コントローラー
+  final List<TodoItem> _todoList = []; // タスクのリスト
+
+  // タスクを追加する関数
+  void _addTodo() {
+    final text = _controller.text.trim(); // 入力値を取得
+    if (text.isNotEmpty) {
+      setState(() {
+        _todoList.add(TodoItem(title: text)); // タスクを追加
+        _controller.clear(); // 入力欄をクリア
+      });
+    }
+  }
+
+  // チェックボックスのON/OFF切り替え
+  void _toggleComplete(int index) {
+    setState(() {
+      _todoList[index].isDone = !_todoList[index].isDone;
+    });
+  }
+
+  // タスクを削除
+  void _deleteTodo(int index) {
+    setState(() {
+      _todoList.removeAt(index);
+    });
+  }
+
+  // UIのビルド
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('ToDo リスト'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            // 入力フォームと追加ボタン
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      hintText: '新しいタスクを入力',
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: _addTodo, // タスク追加処理
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // タスクリスト表示
+            Expanded(
+              child: _todoList.isEmpty
+                  ? const Center(child: Text('タスクがありません'))
+                  : ListView.builder(
+                      itemCount: _todoList.length,
+                      itemBuilder: (context, index) {
+                        final item = _todoList[index];
+                        return ListTile(
+                          leading: Checkbox(
+                            value: item.isDone,
+                            onChanged: (_) => _toggleComplete(index),
+                          ),
+                          title: Text(
+                            item.title,
+                            style: TextStyle(
+                              decoration: item.isDone
+                                  ? TextDecoration.lineThrough // 完了タスクは取り消し線
+                                  : null,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => _deleteTodo(index), // タスク削除
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// タスクのデータモデル
+class TodoItem {
+  String title;   // タスクの名前
+  bool isDone;    // 完了状態（true: 完了）
+
+  TodoItem({required this.title, this.isDone = false});
+}
+
+```
+
+
