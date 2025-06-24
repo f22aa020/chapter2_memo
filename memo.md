@@ -306,6 +306,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
 // ホーム画面のウィジェット
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
